@@ -1,29 +1,23 @@
+package baskets;
+
 import products.Product;
+import stores.Store;
 
 import java.util.*;
 
-public class Basket {
-    private static Basket basket = null;
-
-    private Basket() {
-    }
-
-    public static Basket getInstance() {
-        if (basket == null) basket = new Basket();
-        return basket;
-    }
-
-    Store store = Store.getInstance();
+public class ProductBasket implements Basket<Product> {
 
     Map<Integer, Integer> productsBasket = new HashMap<>(); //корзина покупателя, покупатель выбирает товар, указывая артикул
 
     //получение информации о наличии товара в корзине по его артикулу
+    @Override
     public boolean isProductInProductsBasket(int productCode) {
         return productsBasket.containsKey(productCode);
     }
 
     //добавление продукта в корзину в определенном количестве
-    public boolean addProductToBasket(int productCode, int quantity) {
+    @Override
+    public boolean addProductToBasket(Store<Product> store, int productCode, int quantity) {
         if (productCode > 0 && quantity > 0) {
             if (!isProductInProductsBasket(productCode)) {
                 if (store.bookingProductOnStore(productCode, quantity).doCommand()) {
@@ -52,20 +46,18 @@ public class Basket {
     }
 
     //удаление продукта из корзины в определенном количестве
-    public boolean removeProductFromBasket(int productCode, int quantity) {
+    @Override
+    public boolean removeProductFromBasket(Store<Product> store, int productCode, int quantity) {
         if (productCode > 0 && quantity > 0) {
             if (isProductInProductsBasket(productCode)) {
                 if (store.bookingProductOnStore(productCode, quantity).undoCommand()) {
                     if (quantity == productsBasket.get(productCode)) {
-                        Iterator<Map.Entry<Integer, Integer>> iterator = productsBasket.entrySet().iterator();
-                        while (iterator.hasNext()) {
-                            Map.Entry<Integer, Integer> entry = iterator.next();
+                        for (Map.Entry<Integer, Integer> entry : productsBasket.entrySet()) {
                             int currentNumber = entry.getKey();
                             if (currentNumber == productCode) {
                                 productsBasket.remove(currentNumber);
                                 System.out.println("Товар с артикулом " + productCode + " в количестве "
                                         + quantity + " шт. исключен из корзины");
-
                             }
                         }
                         return true;
@@ -78,7 +70,6 @@ public class Basket {
                         System.out.println("Количество товара, которое необходимо убрать из корзины, превышает количество положенного в корзину товара");
                         return false;
                     }
-
                 } else {
                     System.out.println("Товар с артикулом " + productCode + " в количестве "
                             + quantity + " шт. не может быть исключен из корзины");
@@ -95,8 +86,10 @@ public class Basket {
         }
     }
 
+
     //получение списка продуктовой корзины
-    public List<String> getListOfProductsInBasket() {
+    @Override
+    public List<String> getListOfProductsInBasket(Store<Product> store) {
         List<String> listOfProductsInBasket = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
         if (productsBasket.isEmpty()) {
@@ -104,28 +97,31 @@ public class Basket {
         } else {
             int sum = 0;
             List<Product> shopProductsRangeList = store.getListOfProductsRange();
-            Iterator<Map.Entry<Integer, Integer>> iterator = productsBasket.entrySet().iterator();
-            while (iterator.hasNext()) {
-                Map.Entry<Integer, Integer> entry = iterator.next();
+            for (Map.Entry<Integer, Integer> entry : productsBasket.entrySet()) {
                 int number = entry.getKey();
                 int quantity = entry.getValue();
-                for (int i = 0; i < shopProductsRangeList.size(); i++) {
-                    Product product = shopProductsRangeList.get(i);
+                for (Product product : shopProductsRangeList) {
                     if (product.getProductCode() == number) {
-                        sb.append("-----------------------------");
-                        sb.append("\nАртикул: " + product.getProductCode());
-                        sb.append(", наименование: " + product.getName());
-                        sb.append("\nЦена: " + product.getPrice() + " руб.");
-                        sb.append(", количество: " + quantity);
-                        sb.append("\nОбщая стоимость: " + quantity * product.getPrice() + " руб.");
+                        sb.append("-----------------------------")
+                                .append("\nАртикул: ")
+                                .append(product.getProductCode())
+                                .append(", наименование: ")
+                                .append(product.getName())
+                                .append("\nЦена: ")
+                                .append(product.getPrice())
+                                .append(" руб.").append(", количество: ")
+                                .append(quantity).append("\nОбщая стоимость: ")
+                                .append(quantity * product.getPrice())
+                                .append(" руб.");
                         sum += quantity * product.getPrice();
                         listOfProductsInBasket.add(sb.toString());
                         sb.delete(0, sb.length());
                     }
                 }
             }
-            sb.append("************************");
-            sb.append("\nВСЕГО по всем товарам: " + sum + " руб. ");
+            sb.append("************************")
+                    .append("\nВСЕГО по всем товарам: ")
+                    .append(sum).append(" руб. ");
             listOfProductsInBasket.add(sb.toString());
         }
         return listOfProductsInBasket;

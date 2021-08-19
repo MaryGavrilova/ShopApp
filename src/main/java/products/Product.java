@@ -2,15 +2,15 @@ package products;
 
 import java.util.Objects;
 
-public class Product {
+public class Product<C> {
     protected final int productCode; //артикул товара
     protected String name;
-    protected ProductCategory category;
+    protected C category;
     protected int price;
     protected String producer;
     protected int rating; // количество голосов покупателей за товар
 
-    public Product(int productCode, String name, ProductCategory category, int price, String producer, int rating) {
+    public Product(int productCode, String name, C category, int price, String producer, int rating) {
         this.productCode = productCode;
         this.name = name;
         this.category = category;
@@ -20,7 +20,7 @@ public class Product {
         this.rating = rating;
     }
 
-    public Product(int productCode, String name, ProductCategory category, int price, String producer) {
+    public Product(int productCode, String name, C category, int price, String producer) {
         this.productCode = productCode;
         this.name = name;
         this.category = category;
@@ -37,7 +37,7 @@ public class Product {
         return name;
     }
 
-    public ProductCategory getCategory() {
+    public C getCategory() {
         return category;
     }
 

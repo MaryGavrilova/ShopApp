@@ -1,4 +1,5 @@
 package filters;
+
 import java.util.List;
 
 public interface FilterByRatingHigherThanValue<T> {

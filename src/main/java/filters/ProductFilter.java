@@ -1,17 +1,17 @@
 package filters;
 
+import products.FoodProductCategory;
 import products.Product;
-import products.ProductCategory;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ProductFilter implements FilterByKeyWord<Product>, FilterByCategory<Product, ProductCategory>,
+public class ProductFilter implements FilterByKeyWord<Product>, FilterByCategory<Product, FoodProductCategory>,
         FilterByProducer<Product, String>, FilterByPriceRange<Product>,
         FilterByRatingHigherThanValue<Product>, FilterByRatingLowerThanValue<Product> {
     @Override
-        public List<Product> filterByKeyWord(List<Product> products, String keyWord) {
+    public List<Product> filterByKeyWord(List<Product> products, String keyWord) {
         List<Product> resultList = products.stream()
                 .filter(product -> product.getName().contains(keyWord))
                 .collect(Collectors.toList());
@@ -19,7 +19,7 @@ public class ProductFilter implements FilterByKeyWord<Product>, FilterByCategory
     }
 
     @Override
-    public List<Product> filterByCategory(List<Product> products, ProductCategory category) {
+    public List<Product> filterByCategory(List<Product> products, FoodProductCategory category) {
         List<Product> resultList = products.stream()
                 .filter(product -> product.getCategory().equals(category))
                 .collect(Collectors.toList());
@@ -53,12 +53,14 @@ public class ProductFilter implements FilterByKeyWord<Product>, FilterByCategory
         return resultList;
     }
 
+
     @Override
     public List<Product> filterByRatingLowerThanValue(List<Product> products, int rating) {
         List<Product> resultList = products.stream()
                 .filter(product -> product.getRating() < rating)
-                .sorted(Comparator.comparing(Product::getRating).reversed())
+                .sorted(Comparator.comparing(Product::getRating))
                 .collect(Collectors.toList());
         return resultList;
     }
+
 }

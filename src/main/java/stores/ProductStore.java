@@ -1,37 +1,34 @@
+package stores;
+
 import products.Product;
 
 import java.util.*;
 
-public class Store {
-    private static Store store = null;
-
-    private Store() {
-    }
-
-    public static Store getInstance() {
-        if (store == null) store = new Store();
-        return store;
-    }
+public class ProductStore implements Store<Product> {
 
     Map<Integer, Product> productsRange = new HashMap<>(); // ассортимент магазина (перечень всех товаров, которыми в принципе торгует магазин)
     Map<Integer, Integer> stocks = new HashMap<>(); // актуальное наличие товаров, количество каждого наименования
 
     //получение списка с перечнем всех товаров магазина
+    @Override
     public List<Product> getListOfProductsRange() {
         return new ArrayList<Product>(productsRange.values());
     }
 
     //получение продукта из перечня всех товаров магазина по его артикулу
+    @Override
     public Product getProductFromProductsRange(int productCode) {
         return productsRange.get(productCode);
     }
 
     //получение информации о внесении продукта в перечень всех товаров магазина по его артикулу
+    @Override
     public boolean isProductInRange(int productCode) {
         return productsRange.containsKey(productCode);
     }
 
     //получение количества товара конкретного наименования на складе по его артикулу
+    @Override
     public int getQuantityByProductCode(int productCode) {
         if (isProductInRange(productCode)) {
             return stocks.get(productCode);
@@ -42,8 +39,9 @@ public class Store {
     }
 
     //внесение  и отмена внесения продукта в перечень всех товаров магазина
+    @Override
     public StoreCommand addProductToProductsRange(Product product) {
-        StoreCommand storeCommand = new StoreCommand() {
+        return new StoreCommand() {
             @Override
             public boolean doCommand() {
                 if (productsRange.containsKey(product.getProductCode())) {
@@ -63,18 +61,14 @@ public class Store {
                     System.out.println("Продукт не может быть исключен из перечня товаров магазина, поскольку его там нет");
                     return false;
                 } else {
-                    Iterator<Map.Entry<Integer, Integer>> iteratorForStocks = stocks.entrySet().iterator();
-                    while (iteratorForStocks.hasNext()) {
-                        Map.Entry<Integer, Integer> entry = iteratorForStocks.next();
+                    for (Map.Entry<Integer, Integer> entry : stocks.entrySet()) {
                         int currentCode = entry.getKey();
                         if (currentCode == product.getProductCode()) {
                             stocks.remove(currentCode);
                             System.out.println("Продукт исключен из списка по наличию товара в магазине ");
                         }
                     }
-                    Iterator<Map.Entry<Integer, Product>> iteratorForProductsRange = productsRange.entrySet().iterator();
-                    while (iteratorForProductsRange.hasNext()) {
-                        Map.Entry<Integer, Product> entry = iteratorForProductsRange.next();
+                    for (Map.Entry<Integer, Product> entry : productsRange.entrySet()) {
                         Product currentProduct = entry.getValue();
                         if (currentProduct.equals(product)) {
                             productsRange.remove(entry.getKey());
@@ -85,12 +79,12 @@ public class Store {
                 }
             }
         };
-        return storeCommand;
     }
 
     //поставка товара в определенном количестве на склад
     //quantity - количество, которое мы добавляем к текущему количеству на складе
     // если товара до этого не было в перечне всех товаров, то добавляем его
+    @Override
     public void deliverProductToStore(Product product, int quantity) {
         if (quantity > 0) {
             if (productsRange.containsKey(product.getProductCode())) {
@@ -108,8 +102,9 @@ public class Store {
     }
 
     //бронирование и отмена бронирования товара на складе при внесении его в корзину
+    @Override
     public StoreCommand bookingProductOnStore(int productCode, int quantity) {
-        StoreCommand storeCommand = new StoreCommand() {
+        return new StoreCommand() {
             @Override
             public boolean doCommand() {
                 if (stocks.containsKey(productCode)) {
@@ -136,7 +131,6 @@ public class Store {
                     System.out.println("Товара с таким артикулом " + productCode + " в данном магазине нет");
                     return false;
                 }
-
             }
 
             @Override
@@ -153,10 +147,10 @@ public class Store {
                 }
             }
         };
-        return storeCommand;
     }
 
     //получение листа с доступными для покупки товарами
+    @Override
     public List<Product> getListOfAvailableProducts() {
         List<Product> list = new ArrayList<>();
         Iterator<Map.Entry<Integer, Product>> iterator = productsRange.entrySet().iterator();

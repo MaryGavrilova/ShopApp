@@ -1,7 +1,11 @@
+import baskets.Basket;
+import baskets.ProductBasket;
 import filters.ProductFilter;
+import products.FoodProductCategory;
 import products.Product;
 import products.ProductBuilder;
-import products.ProductCategory;
+import stores.FoodProductStore;
+import stores.Store;
 
 import java.util.List;
 import java.util.Scanner;
@@ -9,125 +13,134 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        Basket basket = Basket.getInstance();
-        Store store = Store.getInstance();
-        ProductFilter productFilter = new ProductFilter();
+        Basket<Product> productBasket = new ProductBasket(); //для помещения в корзину товаров, имеющих характеристики Product
+        ProductFilter productFilter = new ProductFilter(); // для фильтрации товаров, имеющих характеристики Product
+        Store<Product> foodProductStore = FoodProductStore.getInstance();
+        // для хранения продуктов питания (категория FoodProductCategory), имеющих характеристики Product
 
-        Product product1 = new ProductBuilder()
+        //Структура программы позволяет создать много разных складов для товаров типа Product (путем наследования),
+        // логически отличающихся, например категорией товара. При этом склады могут иметь свои особенности реализации,
+        // иметь дополнительные методы, если необходимо.
+        // В тоже время корзина productBasket сможет работать с каждым складом (наследованным от ProductStore)
+
+        Product<FoodProductCategory> foodProduct1 = new ProductBuilder<FoodProductCategory>()
                 .setProductCode(1)
                 .setName("Печенье овсяное")
-                .setCategory(ProductCategory.PASTRY)
+                .setCategory(FoodProductCategory.PASTRY)
                 .setPrice(40)
                 .setProducer("Belvita")
                 .setRating(5)
                 .build();
-        Product product2 = new ProductBuilder()
+        Product<FoodProductCategory> foodProduct2 = new ProductBuilder<FoodProductCategory>()
                 .setProductCode(2)
                 .setName("Печенье с кусочками шоколада")
-                .setCategory(ProductCategory.PASTRY)
+                .setCategory(FoodProductCategory.PASTRY)
                 .setPrice(60)
                 .setProducer("Milka")
                 .setRating(10)
                 .build();
-        Product product3 = new ProductBuilder()
+        Product<FoodProductCategory> foodProduct3 = new ProductBuilder<FoodProductCategory>()
                 .setProductCode(3)
                 .setName("Ржаной хлеб")
-                .setCategory(ProductCategory.BAKERY)
+                .setCategory(FoodProductCategory.BAKERY)
                 .setPrice(10)
                 .setProducer("Сормовский хлебозавод")
                 .setRating(30)
                 .build();
-        Product product4 = new ProductBuilder()
+        Product<FoodProductCategory> foodProduct4 = new ProductBuilder<FoodProductCategory>()
                 .setProductCode(4)
                 .setName("Пшеничный хлеб")
-                .setCategory(ProductCategory.BAKERY)
+                .setCategory(FoodProductCategory.BAKERY)
                 .setPrice(8)
                 .setProducer("Сормовский хлебозавод")
                 .setRating(25)
                 .build();
-        Product product5 = new ProductBuilder()
+        Product<FoodProductCategory> foodProduct5 = new ProductBuilder<FoodProductCategory>()
                 .setProductCode(5)
                 .setName("Молоко 6%")
-                .setCategory(ProductCategory.DAIRY)
+                .setCategory(FoodProductCategory.DAIRY)
                 .setPrice(50)
                 .setProducer("Княгинино")
                 .setRating(20)
                 .build();
-        Product product6 = new ProductBuilder()
+        Product<FoodProductCategory> foodProduct6 = new ProductBuilder<FoodProductCategory>()
                 .setProductCode(6)
                 .setName("Апельсиновый сок")
-                .setCategory(ProductCategory.DRINKS)
+                .setCategory(FoodProductCategory.DRINKS)
                 .setPrice(90)
                 .setProducer("RICH")
                 .setRating(15)
                 .build();
-        Product product7 = new ProductBuilder()
+        Product<FoodProductCategory> foodProduct7 = new ProductBuilder<FoodProductCategory>()
                 .setProductCode(7)
                 .setName("Докторская колбаса")
-                .setCategory(ProductCategory.MEAT)
+                .setCategory(FoodProductCategory.MEAT)
                 .setPrice(200)
                 .setProducer("Мираторг")
                 .setRating(70)
                 .build();
-        Product product8 = new ProductBuilder()
+        Product<FoodProductCategory> foodProduct8 = new ProductBuilder<FoodProductCategory>()
                 .setProductCode(8)
                 .setName("Российский сыр")
-                .setCategory(ProductCategory.DAIRY)
+                .setCategory(FoodProductCategory.DAIRY)
                 .setPrice(150)
                 .setProducer("Valio")
                 .build();
-        Product product9 = new ProductBuilder()
+        Product<FoodProductCategory> foodProduct9 = new ProductBuilder<FoodProductCategory>()
                 .setProductCode(9)
                 .setName("Сметана 20%")
-                .setCategory(ProductCategory.DAIRY)
+                .setCategory(FoodProductCategory.DAIRY)
                 .setPrice(30)
                 .setProducer("Княгинино")
                 .setRating(45)
                 .build();
-        Product product10 = new ProductBuilder()
+        Product<FoodProductCategory> foodProduct10 = new ProductBuilder<FoodProductCategory>()
                 .setProductCode(10)
                 .setName("Масло сливочное")
-                .setCategory(ProductCategory.DAIRY)
+                .setCategory(FoodProductCategory.DAIRY)
                 .setPrice(100)
                 .setProducer("Княгинино")
                 .setRating(60)
                 .build();
 
-        store.addProductToProductsRange(product1).doCommand();
-        store.addProductToProductsRange(product2).doCommand();
-        store.addProductToProductsRange(product3).doCommand();
-        store.addProductToProductsRange(product4).doCommand();
-        store.addProductToProductsRange(product5).doCommand();
-        store.addProductToProductsRange(product6).doCommand();
-        store.addProductToProductsRange(product7).doCommand();
-        store.addProductToProductsRange(product8).doCommand();
-        store.addProductToProductsRange(product9).doCommand();
-        store.addProductToProductsRange(product10).doCommand();
+        foodProductStore.addProductToProductsRange(foodProduct1).doCommand();
+        foodProductStore.addProductToProductsRange(foodProduct2).doCommand();
+        foodProductStore.addProductToProductsRange(foodProduct3).doCommand();
+        foodProductStore.addProductToProductsRange(foodProduct4).doCommand();
+        foodProductStore.addProductToProductsRange(foodProduct5).doCommand();
+        foodProductStore.addProductToProductsRange(foodProduct6).doCommand();
+        foodProductStore.addProductToProductsRange(foodProduct7).doCommand();
+        foodProductStore.addProductToProductsRange(foodProduct8).doCommand();
+        foodProductStore.addProductToProductsRange(foodProduct9).doCommand();
+        foodProductStore.addProductToProductsRange(foodProduct10).doCommand();
 
-        store.deliverProductToStore(product1, 5);
-        store.deliverProductToStore(product2, 8);
-        store.deliverProductToStore(product3, 20);
-        store.deliverProductToStore(product4, 30);
-        store.deliverProductToStore(product5, 3);
-        store.deliverProductToStore(product6, 10);
-        store.deliverProductToStore(product7, 15);
-        store.deliverProductToStore(product8, 10);
-        store.deliverProductToStore(product9, 7);
-        store.deliverProductToStore(product10, 25);
+        foodProductStore.deliverProductToStore(foodProduct1, 5);
+        foodProductStore.deliverProductToStore(foodProduct2, 8);
+        foodProductStore.deliverProductToStore(foodProduct3, 20);
+        foodProductStore.deliverProductToStore(foodProduct4, 30);
+        foodProductStore.deliverProductToStore(foodProduct5, 3);
+        foodProductStore.deliverProductToStore(foodProduct6, 10);
+        foodProductStore.deliverProductToStore(foodProduct7, 15);
+        foodProductStore.deliverProductToStore(foodProduct8, 10);
+        foodProductStore.deliverProductToStore(foodProduct9, 7);
+        foodProductStore.deliverProductToStore(foodProduct10, 25);
 
-        System.out.println("***********************************\nДобро пожаловать в онлайн-магазин!");
+        System.out.println("***********************************" +
+                "\nДобро пожаловать в онлайн-магазин!");
         while (true) {
             try {
-                System.out.println("\nОСНОВНОЕ МЕНЮ:" +
-                        "\n1. Посмотреть список доступных для покупки товаров" +
-                        "\n2. Отфильтровать список товаров (по ключевому слову, категории, ценовому диапазону, производителю, рейтингу)" +
-                        "\n3. Получить информацию о количестве товара в наличии" +
-                        "\n4. Положить товар в корзину" +
-                        "\n5. Убрать товар из корзины" +
-                        "\n6. Посмотреть список продуктовой корзины" +
-                        "\n7. Оформить заказ" +
-                        "\n8. Оценить товар (нравится / не нравится)" +
-                        "\n0. Выход");
+                System.out.println("""
+                                                
+                        ОСНОВНОЕ МЕНЮ:
+                        1. Посмотреть список доступных для покупки товаров
+                        2. Отфильтровать список товаров (по ключевому слову, категории, ценовому диапазону, производителю, рейтингу)
+                        3. Получить информацию о количестве товара в наличии
+                        4. Положить товар в корзину
+                        5. Убрать товар из корзины
+                        6. Посмотреть список продуктовой корзины
+                        7. Оформить заказ
+                        8. Оценить товар (нравится / не нравится)
+                        0. Выход""");
                 System.out.println("\nВыберите действие из основного меню, указав номер:");
                 String input = scanner.nextLine();
                 if (input.equals("0")) {
@@ -135,61 +148,63 @@ public class Main {
                     break;
                 }
                 switch (input) {
-                    case "1":
-                        List<Product> listOfAvailableProducts = store.getListOfAvailableProducts();
+                    case "1" -> {
+                        List<Product> listOfAvailableProducts = foodProductStore.getListOfAvailableProducts();
                         if (listOfAvailableProducts.isEmpty()) {
                             System.out.println("Список доступных для покупки товаров пуст");
                         } else {
                             System.out.println("Список доступных для покупки товаров:");
-                            for (int i = 0; i < listOfAvailableProducts.size(); i++) {
-                                System.out.println(listOfAvailableProducts.get(i));
+                            for (Product listOfAvailableProduct : listOfAvailableProducts) {
+                                System.out.println(listOfAvailableProduct);
                             }
                         }
-                        break;
-                    case "2":
-                        List<Product> listOfProducts = store.getListOfAvailableProducts();
+                    }
+                    case "2" -> {
+                        List<Product> listOfProducts = foodProductStore.getListOfAvailableProducts();
                         if (listOfProducts.isEmpty()) {
                             System.out.println("Список доступных для покупки товаров пуст");
                         } else {
-                            System.out.println("Укажите номер параметра, по которому хотите отфильтровать:" +
-                                    "\n1. по ключевому слову в наименовании товара" +
-                                    "\n2. по категории товара" +
-                                    "\n3. по ценовому диапазону" +
-                                    "\n4. по производителю товара" +
-                                    "\n5. по рейтингу товара");
+                            System.out.println("""
+                                    Укажите номер параметра, по которому хотите отфильтровать:
+                                    1. по ключевому слову в наименовании товара
+                                    2. по категории товара
+                                    3. по ценовому диапазону
+                                    4. по производителю товара
+                                    5. по рейтингу товара""");
                             String inputFilter = scanner.nextLine();
                             switch (inputFilter) {
-                                case "1":
+                                case "1" -> {
                                     System.out.println("Укажите ключевое слово:");
                                     String inputKeyWord = scanner.nextLine();
                                     List<Product> listFilteredByKeyWord = productFilter.filterByKeyWord(listOfProducts, inputKeyWord);
                                     if (!listFilteredByKeyWord.isEmpty()) {
                                         System.out.println("Список доступных для покупки товаров, " +
                                                 "отфильтрованных по ключевому слову: " + inputKeyWord);
-                                        for (int i = 0; i < listFilteredByKeyWord.size(); i++) {
-                                            System.out.println(listFilteredByKeyWord.get(i));
+                                        for (Product product : listFilteredByKeyWord) {
+                                            System.out.println(product);
                                         }
                                     } else {
                                         System.out.println("Список доступных для покупки товаров, " +
                                                 "отфильтрованных по ключевому слову: " + inputKeyWord + " пуст");
                                     }
-                                    break;
-                                case "2":
-                                    System.out.println("Укажите номер категории товара, по которой хотите отфильтровать список:" +
-                                            "\n1. Кондитерские изделия" +
-                                            "\n2. Молочные продукты и сыры" +
-                                            "\n3. Мясные и колбасные изделия" +
-                                            "\n4. Напитки" +
-                                            "\n5. Хлебобулочные изделия");
+                                }
+                                case "2" -> {
+                                    System.out.println("""
+                                            Укажите номер категории товара, по которой хотите отфильтровать список:
+                                            1. Кондитерские изделия
+                                            2. Молочные продукты и сыры
+                                            3. Мясные и колбасные изделия
+                                            4. Напитки
+                                            5. Хлебобулочные изделия""");
                                     int inputNumberOfСategory = Integer.parseInt(scanner.nextLine());
-                                    ProductCategory[] categories = ProductCategory.values();
+                                    FoodProductCategory[] categories = FoodProductCategory.values();
                                     if (inputNumberOfСategory > 0 && inputNumberOfСategory <= categories.length) {
                                         List<Product> listFilteredByCategory = productFilter.filterByCategory(listOfProducts, categories[inputNumberOfСategory - 1]);
                                         if (!listFilteredByCategory.isEmpty()) {
                                             System.out.println("Список доступных для покупки товаров, " +
                                                     "отфильтрованных по категории: " + categories[inputNumberOfСategory - 1]);
-                                            for (int i = 0; i < listFilteredByCategory.size(); i++) {
-                                                System.out.println(listFilteredByCategory.get(i));
+                                            for (Product product : listFilteredByCategory) {
+                                                System.out.println(product);
                                             }
                                         } else {
                                             System.out.println("Список доступных для покупки товаров, " +
@@ -198,8 +213,8 @@ public class Main {
                                     } else {
                                         System.out.println("Категории под таким номером нет");
                                     }
-                                    break;
-                                case "3":
+                                }
+                                case "3" -> {
                                     System.out.println("Укажите значения ценового диапазона:");
                                     System.out.println("Цена от:");
                                     int inputMinPrice = Integer.parseInt(scanner.nextLine());
@@ -210,8 +225,8 @@ public class Main {
                                         if (!listFilteredByPriceRange.isEmpty()) {
                                             System.out.println("Список доступных для покупки товаров, " +
                                                     "отфильтрованных по ценовому диапазону от " + inputMinPrice + " руб. до " + inputMaxPrice + " руб.:");
-                                            for (int i = 0; i < listFilteredByPriceRange.size(); i++) {
-                                                System.out.println(listFilteredByPriceRange.get(i));
+                                            for (Product product : listFilteredByPriceRange) {
+                                                System.out.println(product);
                                             }
                                         } else {
                                             System.out.println("Список доступных для покупки товаров, " +
@@ -219,36 +234,37 @@ public class Main {
                                         }
                                     } else
                                         System.out.println("Цена не может быть меньше, либо равна 0");
-                                    break;
-                                case "4":
+                                }
+                                case "4" -> {
                                     System.out.println("Укажите производителя:");
                                     String inputProducer = scanner.nextLine();
                                     List<Product> listFilteredByProducer = productFilter.filterByProducer(listOfProducts, inputProducer);
                                     if (!listFilteredByProducer.isEmpty()) {
                                         System.out.println("Список доступных для покупки товаров, " +
                                                 "отфильтрованных по производителю: " + inputProducer);
-                                        for (int i = 0; i < listFilteredByProducer.size(); i++) {
-                                            System.out.println(listFilteredByProducer.get(i));
+                                        for (Product product : listFilteredByProducer) {
+                                            System.out.println(product);
                                         }
                                     } else {
                                         System.out.println("Список доступных для покупки товаров, " +
                                                 "отфильтрованных по производителю: " + inputProducer + " пуст");
                                     }
-                                    break;
-                                case "5":
+                                }
+                                case "5" -> {
                                     System.out.println("Укажите  значение рейтинга, относительно которого фильтровать:");
                                     int inputValue = Integer.parseInt(scanner.nextLine());
-                                    System.out.println("Укажите номер варианта фильтра:" +
-                                            "\n1. выше значения" +
-                                            "\n2. ниже значения");
+                                    System.out.println("""
+                                            Укажите номер варианта фильтра:
+                                            1. выше значения
+                                            2. ниже значения""");
                                     String inputVariant = scanner.nextLine();
                                     if (inputVariant.equals("1")) {
                                         List<Product> listFilteredByRatingHigherThanValue = productFilter.filterByRatingHigherThanValue(listOfProducts, inputValue);
                                         if (!listFilteredByRatingHigherThanValue.isEmpty()) {
                                             System.out.println("Список доступных для покупки товаров, " +
                                                     "отфильтрованных по рейтингу выше, чем  " + inputValue);
-                                            for (int i = 0; i < listFilteredByRatingHigherThanValue.size(); i++) {
-                                                System.out.println(listFilteredByRatingHigherThanValue.get(i));
+                                            for (Product product : listFilteredByRatingHigherThanValue) {
+                                                System.out.println(product);
                                             }
                                         } else {
                                             System.out.println("Список доступных для покупки товаров, " +
@@ -259,8 +275,8 @@ public class Main {
                                         if (!listFilteredByRatingLowerThanValue.isEmpty()) {
                                             System.out.println("Список доступных для покупки товаров, " +
                                                     "отфильтрованных по рейтингу ниже, чем  " + inputValue);
-                                            for (int i = 0; i < listFilteredByRatingLowerThanValue.size(); i++) {
-                                                System.out.println(listFilteredByRatingLowerThanValue.get(i));
+                                            for (Product product : listFilteredByRatingLowerThanValue) {
+                                                System.out.println(product);
                                             }
                                         } else {
                                             System.out.println("Список доступных для покупки товаров, " +
@@ -269,57 +285,55 @@ public class Main {
                                     } else {
                                         System.out.println("Варианта с таким номером нет");
                                     }
-                                    break;
-                                default:
-                                    System.out.println("Параметра с таким номером нет");
-                                    break;
+                                }
+                                default -> System.out.println("Параметра с таким номером нет");
                             }
                         }
-                        break;
-                    case "3":
+                    }
+                    case "3" -> {
                         System.out.println("Укажите артикул товара, количество которого хотите узнать:");
                         int productCodeToGetQuantity = Integer.parseInt(scanner.nextLine());
                         if (productCodeToGetQuantity > 0) {
                             System.out.println("Доступное к покупке количество товара: "
-                                    + store.getQuantityByProductCode(productCodeToGetQuantity) + " шт.");
+                                    + foodProductStore.getQuantityByProductCode(productCodeToGetQuantity) + " шт.");
                         } else {
                             System.out.println("Артикул товара не может быть меньше либо равен нулю.");
                         }
-                        break;
-                    case "4":
+                    }
+                    case "4" -> {
                         System.out.println("Укажите артикул товара, который хотите добавить в корзину:");
                         int productCodeToPut = Integer.parseInt(scanner.nextLine());
                         System.out.println("Укажите количество товара:");
                         int quantityToPut = Integer.parseInt(scanner.nextLine());
-                        if (basket.addProductToBasket(productCodeToPut, quantityToPut)) {
+                        if (productBasket.addProductToBasket(foodProductStore, productCodeToPut, quantityToPut)) {
                             System.out.println("Товар добавлен в корзину");
                         } else {
                             System.out.println("Товар не добавлен в корзину");
                         }
-                        break;
-                    case "5":
+                    }
+                    case "5" -> {
                         System.out.println("Укажите артикул товара, который хотите убрать из корзины:");
                         int productCodeToRemove = Integer.parseInt(scanner.nextLine());
                         System.out.println("Укажите количество товара:");
                         int quantityToRemove = Integer.parseInt(scanner.nextLine());
-                        if (basket.removeProductFromBasket(productCodeToRemove, quantityToRemove)) {
+                        if (productBasket.removeProductFromBasket(foodProductStore, productCodeToRemove, quantityToRemove)) {
                             System.out.println("Товар убран из корзины");
                         } else {
                             System.out.println("Товар не убран из корзины");
                         }
-                        break;
-                    case "6":
-                        List<String> basketList = basket.getListOfProductsInBasket();
+                    }
+                    case "6" -> {
+                        List<String> basketList = productBasket.getListOfProductsInBasket(foodProductStore);
                         if (basketList.isEmpty()) {
                             System.out.println("Корзина пуста");
                         } else {
                             System.out.println("Корзина:");
-                            for (int i = 0; i < basketList.size(); i++) {
-                                System.out.println(basketList.get(i));
+                            for (String s : basketList) {
+                                System.out.println(s);
                             }
                         }
-                        break;
-                    case "7":
+                    }
+                    case "7" -> {
                         System.out.println("Для оформления и последующей оплаты заказа укажите адрес элеткронной почты:");
                         String inputMail = scanner.nextLine();
                         System.out.println("Укажите имя и фамилию:");
@@ -328,24 +342,26 @@ public class Main {
                         String inputPhoneNumber = scanner.nextLine();
                         System.out.println("Укажите адрес доставки:");
                         String inputAddress = scanner.nextLine();
-                        System.out.println("Спасибо за ваш заказ! Будем ждать вас снова!" +
-                                "\nВ ближайшее время с вами свяжется наш менеджер для подтверждения заказа," +
-                                "\nа на указанный адрес электронной почты придет письмо со счетом для оплаты заказа.");
-                        break;
-                    case "8":
+                        System.out.println("""
+                                Спасибо за ваш заказ! Будем ждать вас снова!
+                                В ближайшее время с вами свяжется наш менеджер для подтверждения заказа,
+                                а на указанный адрес электронной почты придет письмо со счетом для оплаты заказа.""");
+                    }
+                    case "8" -> {
                         System.out.println("Укажите артикул товара, который хотите оценить:");
                         int productCodeToRate = Integer.parseInt(scanner.nextLine());
-                        if (store.isProductInRange(productCodeToRate)) {
-                            System.out.println("Выберите вариант, указав номер:" +
-                                    "\n1. Товар нравится" +
-                                    "\n2. Товар не нравится");
+                        if (foodProductStore.isProductInRange(productCodeToRate)) {
+                            System.out.println("""
+                                    Выберите вариант, указав номер:
+                                    1. Товар нравится
+                                    2. Товар не нравится""");
                             String inputRating = scanner.nextLine();
                             if (inputRating.equals("1")) {
-                                Product product = store.getProductFromProductsRange(productCodeToRate);
+                                Product product = foodProductStore.getProductFromProductsRange(productCodeToRate);
                                 product.likeProduct();
                                 System.out.println("Спасибо за вашу оценку! Текущий рейтинг товара: " + product.getRating());
                             } else if (inputRating.equals("2")) {
-                                Product product = store.getProductFromProductsRange(productCodeToRate);
+                                Product product = foodProductStore.getProductFromProductsRange(productCodeToRate);
                                 product.dislikeProduct();
                                 System.out.println("Спасибо за вашу оценку! Текущий рейтинг товара: " + product.getRating());
                             } else {
@@ -354,14 +370,11 @@ public class Main {
                         } else {
                             System.out.println("Товара с таким артикулом нет в перечне товаров магазина");
                         }
-                        break;
-                    default:
-                        System.out.println("Действия с таким номером нет");
-                        break;
+                    }
+                    default -> System.out.println("Действия с таким номером нет");
                 }
             } catch (NumberFormatException exception) {
                 System.out.println("Вы ввели не цифру");
-                continue;
             }
         }
     }
